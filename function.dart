@@ -114,5 +114,20 @@ void doStuff(
 var loudify = (msg) => '!! ${msg.toUpperCase()} !!';
 
 /*  Operators
+*     as (类型转换)
+*     is (如果对象具有指定的类型，则为true)
+*     is! (如果对象没有指定的类型，则为false)
+*     ?? (if null)
+*     .. (联级：对对象的成员执行多个操作)
+*     ?.
+*     ~expr (按位补码（0成为1；1变成0）)
+*     -expr (执行前减1)
+*     ~/
 */
+bool isPublic = true;
+// When you need to assign a value based on a boolean expression,consider using ? :
+var visibility = isPublic ? 'public': 'private';
+// if the boolean expression tests for null,consider using ??
+String playerName(String name) => name?? 'Guest';
+
 
