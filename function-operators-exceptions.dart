@@ -44,7 +44,7 @@ void main (List <String> arguments) {
   // Lexical closures
   var add2 = makeAdder(2);
   var add4 = makeAdder(4);
-  assert(add2(3) == 5);
+  assert(add2(3) == 3, 'error');
   assert(add4(3) == 7);
 
   // Lexical scope
@@ -78,9 +78,37 @@ void main (List <String> arguments) {
   var y = w;
   x = w.baz;
   print(y.baz == x);
-  print(v.baz == w.baz);
+  print(v.baz == w.baz); // false
   // if no return value is specified,the statement return null
-  print(fooNull());
+  print(fooNull()); // null
+
+  // Throw
+  // throw FormatException('Expected at least 1 section');
+  // throw 'out of allamas !';
+
+  /*  the first is the exception that was thrown,and the second is the stack trace
+  *   try {
+  *  
+  *   } on Exceptions catch (e){
+  * 
+  *   } catch (e, s) { 
+  *     
+  *   }
+  */
+  try {
+    throw 'out of allamas !';
+  } on Exception catch (e) {
+    print('Unkown excetion:$e');
+  } catch (e, s) {
+    print('Something really unknown: $e');
+    print('Stack trace: $s');
+  }
+
+  try {
+    misbehave();
+  } catch (e) {
+    print('main() finished handling ${e.runtimeType}.');
+  }
 }
 
 String say (String frome, String msg, [String device]) {
@@ -121,7 +149,6 @@ var loudify = (msg) => '!! ${msg.toUpperCase()} !!';
 *     .. (联级：对对象的成员执行多个操作)
 *     ?.
 *     ~expr (按位补码（0成为1；1变成0）)
-*     -expr (执行前减1)
 *     ~/
 */
 bool isPublic = true;
@@ -130,4 +157,49 @@ var visibility = isPublic ? 'public': 'private';
 // if the boolean expression tests for null,consider using ??
 String playerName(String name) => name?? 'Guest';
 
+/*  Cascade notation(..)
+*/
 
+// final addressBook = (AddressBookBuilder()
+//   ..name = 'jenny'
+//   ..email = 'jenny@example.com'
+//   ..phone = (PoneNumberBuilder()
+//     ..number = '415-555-0100'
+//     ..label = 'home')
+//     .build())
+//   .build();
+
+/*  Control flow statements
+*     assert(返回布尔值的表达式, second):second只有第一个参数返回true的时候才能继续执行
+*       
+*/
+// for loops
+void forLoof () {
+  var callbacks = [];
+  for ( var i = 0; i < 2; i++) {
+    callbacks.add(() => print(i));
+  }
+}
+
+/*  Exceptions
+*/
+// throw
+void distanceTo(String other) => throw UnimplementedError();
+
+void misbehave () {
+  try {
+    dynamic foo = true;
+    print(foo++);
+  } catch (e) {
+    // using Object's runtimeType property to get an object's type at runtime
+    print('misbehave() partially handled ${e.runtimeType}.');
+    // Allow callers to see the exception,如果不用rethrow关键字，调用时catch抓不到异常
+    rethrow;
+  } finally {
+    cleanLamasStalls();
+  }
+}
+String cleanLamasStalls () {
+  // Always clean up, even if an exception is thrown
+  print('this code always runs');
+}
