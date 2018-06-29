@@ -1,7 +1,7 @@
 import 'dart:html';
 import './generics.dart' show SomeBaseClass; // 仅导入SomeBaseClass
 import './class.dart' hide Color; // 导入除了Color的其他所有
-import './function-operators-exceptions.dart' deferred as FOE; // 延迟加载
+import './function_operators_exceptions.dart' deferred as FOE; // 延迟加载
 
 void main() {
 
