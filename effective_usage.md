@@ -97,17 +97,70 @@ people.forEach(print);
 // 第一种方法不但简短，最重要的区别是它能保持原有的参数类型
 var copy1 = iterable.toList();
 var copy2 = List.from(iterable);
+
 // Creates a List<int>:
 var iterable = [1, 2, 3];
-
 // Prints "List<int>":
 print(iterable.toList().runtimeType);
-
 // Prints "List<dynamic>":
 print(List.from(iterable).runtimeType);
+
 // 如果想改变数据的类型的话List.from()是不错的选择
 var numbers = [1, 2.3, 4]; // List<num>.
 numbers.removeAt(1); // Now it only contains integers.
 var ints = List<int>.from(numbers);
+
+/**
+*	6：使用whereType()按类型过滤集合
+*/
+// bad
+var objects = [1, 'a', 2, 'b', 3];
+var ints = objects.where((e) => e is int);
+// good
+// 但是用vscode运行时提示暂时不支持此方法
+var ints3 = objects.whereType<int>();
+
+/**
+* 7: 避免使用cast()来更改集的类型
+*/
+// good
+List<int> singletonList(int value) {
+  var list = <int>[];
+  list.add(value);
+  return list;
+}
+// bad
+List<int> singletonList(int value) {
+  var list = [];
+  list.add(value);
+  return list.cast<int>();
+}
+
+// good
+void printEvents(List<Object> objects) {
+  for(var n in objects){
+    if((n as int).inEven) print(n);
+  }
+}
+// bad
+void printEvents(List<Object> objects) {
+  for(var n in objects.cast<int>()){
+    if(n.inEven) print(n);
+  }
+}
+
+// good
+int median(List<Object> objects){
+  var ints = List<int>.from(objects);
+  ints.sort();
+  return ints[ints.length ~/ 2];
+}
+// bad
+int median(List<Object> objects){
+  var ints = objects.cast<int>();
+  ints.sort();
+  return ints[ints.length ~/ 2];
+}
 ```
 
+##### 3: Functions
