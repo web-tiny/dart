@@ -164,3 +164,121 @@ int median(List<Object> objects){
 ```
 
 ##### 3: Functions
+
+```dart
+/**
+*	1: DO use a function declaration to bind a function to a name
+*/
+// good
+void main(){
+    localFunction(){...}
+}
+// bad
+void main(){
+    var localFunction = (){...}
+}
+
+/**
+*	2: DON’T create a lambda when a tear-off will do
+*/
+// good
+names.forEach(print);
+// bad
+names.forEach((name){
+    print(name);
+})
+```
+
+##### 4: Parameters:
+
+```dart
+/**
+* 1: DO use = to separate a named parameter from its default value.
+*/
+// good
+void insert(Object item, {int at = 0}){...}
+// bad
+void insert(Object item, {int at: 0}){...}
+
+/**
+* 2: DON'T use an explicit(显示的) value of null
+*/
+// good
+void error([String message]){ stderr.write(message ?? '\n');}
+// bad
+void error([String message = null]){ stderr.write(message ?? '\n');}
+```
+
+##### 5: Variables:
+
+```dart
+/**
+*	1: Don't explicitly initialize variables to null.
+*/
+// good
+int _nextId;
+class LazyId {
+    int _id;
+    int get id {
+        if(_nextId == null) _nextId = 0;
+        if(_id == null) _id = _nextId ++;
+        return _id;
+    }
+}
+// bad
+int _nextId = null;
+class LazyId {
+    int _id = null;
+    int get id {
+        if(_nextId == null) _nextId = 0;
+        if(_id == null) _id = _nextId ++;
+        return _id;
+    }
+}
+
+/**
+* 	2: avoid storing what you can calculate
+*/
+// good
+class Circle {
+    num radius;
+    Circle(this.radius);
+    num get area => pi * radius * radius;
+    num get circumference => pi * 2.0 * radius;
+}
+// bad
+class Circle {
+    num radius;
+    num area;
+    num circumference;
+    Circle(this.radius)
+    	:radius = radius,
+    	area = pi * radius * radius,
+    	circumference => pi * 2.0 * radius;
+}
+// bad (To correctly handle cache invalidation,we need to do this:)
+class Circle {
+    num _radius;
+    num get radius => _radius;
+    set radius(num value){
+        _radius = value;
+        _recalculate();
+    }
+    
+    num _area;
+    num get area => _area;
+    
+    num _circumference;
+    num get circumference => _circumference;
+    
+    Circle(this._radius){
+        _recalculate();
+    }
+    void _recalculate(){
+        _area = pi * radius * radius;
+        _circumference = pi * 2.0 * radius;
+    }
+}
+```
+
+##### 6: Members:
