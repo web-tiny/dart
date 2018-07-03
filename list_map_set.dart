@@ -1,3 +1,5 @@
+import 'dart:math';
+import 'dart:typed_data';
 void main() {
   /**
    * 数组
@@ -95,6 +97,15 @@ void main() {
   print(list.toList()); // [66, 88, 99, 77]
   // 用指定字符连接列表元素
   print(list.join(',')); // 66,88,99,77
+  // 数组排序
+  list.sort((a, b) => a.compareTo(b));
+  print(list); // [66, 77, 88, 99]
+  // var listUpperCaseValue = list.map((number) => number.toUpperCase());
+  // listUpperCaseValue.forEach(print);
+  bool isDecaffeinated(num number) => number == '99';
+  list.where((number) => isDecaffeinated(number));
+  print(list.any(isDecaffeinated));
+  print(list.every(isDecaffeinated));
 
   /**
    * Map(映射)
@@ -152,6 +163,8 @@ void main() {
   // 返回删除后的新数组
   sillains.removeAll(['kotlin','java']); 
   print(sillains); // {dart, javascript, php, .net, swift-c, c++}
+  // var nobleGases = Set.from(['编译原理', '计算机操作系统']);
+  // list.intersection(nobleGases);
   sillains.clear();
   print(sillains); // {}
 }

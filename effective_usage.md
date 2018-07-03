@@ -14,7 +14,7 @@ part of my_library	// bad
 
 #####  二：在编写字符串相关的code时记住以下规则
 
-#####  1:Strings:
+#####  1: Strings:
 
 ```dart
 /// 1：使用相邻的字符串连接字符串文字
@@ -282,3 +282,329 @@ class Circle {
 ```
 
 ##### 6: Members:
+
+```dart
+/**
+*	1： Don't wrap a field in a getter and setter unnecessarily
+*/
+// bood
+class Box {
+  var contents;
+}
+// bad
+class Box {
+  var _contents;
+  get contents => _contents;
+  set contents(value) {
+    _contents = value;
+  }
+}
+
+/**
+* 2: prefer  using a final field to make a read-only property
+*/
+// good
+class Box {
+  final contents = [];
+}
+// bad
+class Box {
+  var _contents;
+  get contents => _contents;
+}
+
+/**
+*	3: consider using => for simple members
+*
+*/
+// good
+double get area => (right - left) * (bottom - top);
+bool isReady(num time) => minTime == null || minTime <= time;
+String capitalize (String name) => '${name[0].toUpperCase()}${name.substring(1)}';
+// good
+Treasure openChest(Chest chest, Point where){
+  if(_opened.containsKey(chest)) return null;
+  var treasure = Treasure(where);
+  treasure.addAll(chest.contents);
+  _opened[chest] = treasure;
+  return treasure;
+}
+//bad
+Treasure openChest(Chest chest, Point where) =>
+  _opened.containsKey(chest) ? null: _opened[chest] = treasure
+  	..addAll(chest.contents);
+// good
+num get x => center.x;
+set x(num value) => center = Point(value,center.y);
+
+/**
+*	4: Don't use this.when not needed to avoid shadowing.
+*	The only time you need to use this. is when a local variable with the same name shadows the member you want to access.
+*/
+// bad
+class Box {
+  var  value;
+  void clear () {
+    this.update(null);
+  }
+  void update (value) {
+    this.value = value;
+  }
+}
+// good
+class Box {
+  var  value;
+  void clear () {
+    update(null);
+  }
+  void update (value) {
+    this.value = value;
+  }
+}
+// good (Note that constructor parameters never shadow fields in constructor initialization lists:)
+class Bax extends BaseBox {
+  var value;
+  Box(value)
+    ：value = value,
+  	super(value);
+}
+
+
+/**
+*	5: Do initialize fields at their declaration when possible
+*	
+*/
+// bad
+class Folder {
+  final String name;
+  final List<Documents> contents;
+  Folder(this.name) : contents = [];
+  Folder.temp() : name = 'temporary';
+}
+// good
+class Folder {
+  final String name;
+  final List<Documents> contens = [];
+  Folder(this.name);
+  Folder.temp() : name = 'temporary';
+}
+```
+
+##### 7: Constructors
+
+```dart
+/**
+*	1：Do use initializing formals when possible
+*	Many fields are initialized directly from a constructor parameter,like:
+*/
+// bad
+class Point {
+  num x, y;
+  Point(num x, num y) {
+    this.x = y;
+    this.y = y;
+  }
+}
+// good
+class Point {
+  num x, y;
+  Point(this.x, this.y);
+}
+
+/**
+* 2: Don't type annotate initializing formals
+*/
+// good
+class Point {
+  int x, y;
+  Point(this.x, this.y);
+}
+// bad
+class Point {
+  int x, y;
+  Point(int this.x, int this.y);
+}
+
+/**
+*	3：Do use: instead of {} for empty constructor bodies
+*/
+// good
+class Point {
+  int x, y;
+  Point(this.x, this.y);
+}
+// bad
+class Point {
+  int x, y;
+  Point(this.x, this.y){}
+}
+
+/**
+*	4：Don't use new
+*	dart允许使用new，但是为了减少迁移痛苦，请考虑将其弃用并从代码中删除它
+*/
+// good
+Widget build(BuilContent context) {
+  return Row(
+    children:[ 
+      RaisedButton(child: Text('Increment'),
+      ),
+      Text('Click !'),
+    ]
+  )
+}
+// bad
+Widget build(BuilContent context) {
+  return new Row(
+    children:[ 
+      new RaisedButton(child: new Text('Increment'),
+      ),
+      new Text('Click !'),
+    ]
+  )
+}
+
+/**
+* 5: Don't use const redundantly(冗余的)
+*/
+// good
+const primaryColors = [
+  Color('red', [255, 0, 0]),
+  Color('green', [0, 255, 0]),
+  Color('blue', [0, 0, 255]),
+]; 
+// bad
+const primaryColors = const [
+  const Color('red', const [255, 0, 0]),
+  const Color('green', const [0, 255, 0]),
+  const Color('blue', const [0, 0, 255]),
+]; 
+
+```
+
+##### 8: Error handling
+
+```dart
+/** 
+*	1：Avoid catches without on clauses.
+*	2: Don't discard errors from catches without on clauses
+*	3: Do throw objects that implement Error only for programmatic errors
+*	4: Dont't explicitly catch Error or types that implements it
+* 5: Do use rethrow to rethrow a caught exception
+*/
+// bad
+try {
+  somthingRisky();
+} catch (e) {
+  if (! canHandle(e)) throw e;
+  handle(e);
+}
+// good
+try {
+  somthingRisky();
+} catch (e) {
+  if (! canHandle(e)) rethrow;
+  handle(e);
+}
+```
+
+##### 9: Asynchrony
+
+```dart
+/**
+*	1： Prefer async/await over using raw futures
+*/
+// good
+Future<int> countActivePlayer(String teamName) async {
+  try {
+    var team = await downloadTeam(teamName);
+    if(team == null) return 0;
+    var players = await team.roster;
+    return players.where((player) => player.isActive).length;
+  } cath (e) {
+    log.error(e);
+    return 0;
+  }
+}
+// bad
+Future<int> countActivePlayer(String teamName) {
+  return downloadTeam(teamName).then((team) {
+    if(team == null) return 0;
+    return team.roster.then((players){
+      return players.where((player) => player.isActive).length;
+    });
+  }).cathError((e){
+    log.error(e);
+    return 0;
+  });
+}
+
+/**
+*	2: DO test for Future<T> when disambiguating a FutureOr<T> whose type argument could be Object
+*/
+// good
+Future<T> logValue<T>(Future<T> value) async {
+  if (value is Future<T>) {
+    var result = await value;
+    print(result);
+    return result;
+  } else {
+    print(value);
+    return value as T;
+  }
+}
+// bad
+Future<T> logValue<T>(Future<T> value) async {
+  if (value is T) {  
+    print(value);
+    return value;
+  } else {
+    var result = await value;
+    print(result);
+    return result;
+  }
+}
+
+/**
+*	3: Avoid using Completer directly
+*/
+// bad
+Future<bool> fileContainsBear(String path) {
+  var completer = Completer<bool>();
+  File(path).readAsString().then((contens){
+    completer.complete(contens.contains('bear'));
+  });
+  return completer.future;
+}
+// good
+Future<bool> fileContainsBear(String path) {
+  return File(path).readAsString().then((contens){
+    contens.contains('bear');
+  });
+}
+// good
+Future<bool> fileContainsBear(String path) async {
+  var contains = await File(path).readAsString();
+  return contens.contains('bear');
+}
+/**
+ * 4: Don't use async when it has no useful effect
+ */
+// good
+Future afterTwoThing(Future first, Future second) {
+  return Future.wait([first, second]);
+}
+// bad
+Future afterTwoThing(Future first, Future second) async {
+  return Future.wait([first, second]);
+}
+// good
+Future usesAwait(Future later) async {
+  print(await later);
+}
+Future asyncError() async {
+  throw 'Error!';
+}
+Future asyncValue() async => 'value';
+```
+
