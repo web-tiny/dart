@@ -15,11 +15,12 @@ void main() {
   print(p1.hashCode == p2.hashCode);
   print(p1 == p2);
   print(p1 != p3);
-
+  var s3 = r"in a raw string, even \n isn't special.";
+  print(s3);
   // Iterable objects can be used with for-in
-  for(var process in Processes()){
-    // Do something with the process
-  }
+  // for(var process in Processes()){
+  //   // Do something with the process
+  // }
 }
 
 /**
