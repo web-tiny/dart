@@ -1,5 +1,7 @@
 import 'dart:core';
 
+import 'function_operators_exceptions.dart';
+
 void main() {
   var short = const Line(1);
   print(short); // Instance of 'Line'
@@ -21,6 +23,19 @@ void main() {
   // for(var process in Processes()){
   //   // Do something with the process
   // }
+  foo(){
+    return 'tiny';
+  };
+  print(foo());
+  // var msg;
+  String toString(msg) => msg ?? (msg = 'tiny');
+  print(toString('jrg'));
+
+  var callbacks = [];
+  for (var i = 0; i < 3; i++) {
+    callbacks.add(() => print(i));
+  }
+  callbacks.forEach((c) => c());
 }
 
 /**
@@ -71,10 +86,10 @@ class ProcessIterator implements Iterator<Process> {
   @override
   bool moveNext() => true;
 }
-class Processes extends IterableBase<Process> {
-  @override
-  final Iterator<Process> iterator = ProcessIterator();
-}
+// class Processes extends IterableBase<Process> {
+//   @override
+//   final Iterator<Process> iterator = ProcessIterator();
+// }
 
 /**
  * Exceptions
