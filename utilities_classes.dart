@@ -1,5 +1,5 @@
 import 'dart:core';
-
+import 'dart:math';
 import 'function_operators_exceptions.dart';
 
 void main() {
@@ -35,7 +35,23 @@ void main() {
   for (var i = 0; i < 3; i++) {
     callbacks.add(() => print(i));
   }
+  assert(2 < 1);
   callbacks.forEach((c) => c());
+
+  try {
+    throw 'Out of llams';
+  }on Exception catch(e) {
+    print('Unknow exception: $e');
+  } catch (e) {
+    print('Error: $e');
+  } finally {
+    print('finally');
+  }
+
+  var p = new Point(2, 3);
+  print(p.distanceFromOrigin);
+
+  
 }
 
 /**
@@ -91,6 +107,13 @@ class ProcessIterator implements Iterator<Process> {
 //   final Iterator<Process> iterator = ProcessIterator();
 // }
 
-/**
- * Exceptions
- */
+class Point {
+  final num x;
+  final num y;
+  final num distanceFromOrigin;
+
+  Point(x, y)
+    : x = x,
+      y = y,
+      distanceFromOrigin = sqrt(x * x + y * y);
+}

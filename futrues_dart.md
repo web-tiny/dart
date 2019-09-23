@@ -139,3 +139,102 @@ assert(next != null);
 assert(number < 100);
 ```
 ##14:异常(Exceptions)
+```dart
+try {
+  throw 'Out of llams';
+}on Exception catch(e) {
+  print('Unknow exception: $e');
+} catch (e) {
+  print('Error: $e');
+} finally {
+  print('finally');
+}
+```
+##15:Classes
+1:Constructors：
+默认构造函数/构造函数不会继承/命名构造函数/调用超类构造函数/重定向构造函数/常量构造函数/工厂方法构造函数
+2:函数：实例函数/抽象函数
+3:抽象类
+4:隐式接口
+5:扩展类
+6:枚举类型
+7:为类添加新的功能
+8:类变量和函数：静态变量/静态函数
+
+##16:泛型
+```dart
+// 1：格式，List<T>,使用时再指定对应的格式
+abstract class Cach<T> {
+  T getByKey(String key);
+  setByKey(String key, T value);
+}
+// 2:使用集合字面量
+var names = <String>['name', 'age', 'height'];
+var pages = <String, String> {
+  'index.html': 'HomePage',
+  'robot.html': 'Hints of web robots'
+}
+// 3:限制泛型类型，限制泛型的具体类型，使用extends来实现
+class Foo<T extends SomeBaseClass> {}
+var someBaseClassFoo = new Foo<SomeBaseClass>();
+// 4:泛型函数（在Dart SDK1.21开始可以使用泛型函数）
+T first <T>(List<T> ts) {
+  T temp ?= ts[0];
+  return temp;
+}
+```
+##17:Asynchrony support（异步支持）
+```dart
+// await async
+checkVesion() async {
+  var version = await lookUpVersion();
+  if(version == expectedVesion) {
+    // do something
+  } else {
+
+  }
+}
+// 循环中使用异步
+main() async {
+  await for(var req in reqServer) {
+    handleReq(req);
+  }
+}
+```
+##18:Metadata（元数据）
+```dart
+// 使用元数据为代码添加其他额外信息，
+// 以@字符开头，
+class Televevion {
+  @deprecated
+  void activate() {
+    turnOn();
+  }
+
+  void turnOn() {
+    print('on!');
+  }
+}
+// 自定义元数据
+library todo;
+class todo {
+  final String who;
+  final String what;
+
+  const todo(this.who, this.what);
+}
+@todo('seth', 'make this do monething')
+void doSomething() {
+  print('do something');
+}
+```
+##19:注释
+```dart
+// 单行注释： // 注释内容
+// 多行注释
+main() {
+  /*
+  * this is a lot of work
+  */
+}
+// 文档注释  /// 或者/** */
